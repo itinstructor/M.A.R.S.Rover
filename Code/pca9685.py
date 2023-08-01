@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 #
 # PCA9685 Library
@@ -12,8 +11,9 @@
 #
 #======================================================================
 
-from __future__ import print_function
-import smbus, time
+# from __future__ import print_function
+import time
+import smbus
 bus = smbus.SMBus(1)
 
 PCA = 0x40    # Fixed I2C Address of PC9685

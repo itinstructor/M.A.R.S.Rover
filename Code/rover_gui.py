@@ -18,6 +18,7 @@
 from tkinter import *       # Import tkinter for GUI
 from tkinter.ttk import *   # Add ttk themed widgets
 import rover                # Import MARS Rover library
+import rover_lib
 # Initialize the rover library without LED's
 rover.init(0)
 
@@ -25,87 +26,51 @@ rover.init(0)
 class RoverGUI:
     def __init__(self):
         """ Initialize the program """
-        # Set servo physical pin numbers
-        self.servo_FL = 9
-        self.servo_RL = 11
-        self.servo_FR = 15
-        self.servo_RR = 13
-        self.servo_MA = 0
+        self.rl = rover_lib.RoverLib()
 
         # Set initial speed
         self.speed = 60
 
         # Create window
-        self.window = Tk()
-        self.window.title("MARS Rover Remote")
+        self.root = Tk()
+        self.root.title("MARS Rover Remote")
+
+        # Call self.quit when window is closed
+        self.root.protocol("WM_DELETE_WINDOW", self.exit_program)
 
         # Set the window size and location
         # 350x250 pixels in size, location at 50x50
-        self.window.geometry("300x320+50+50")
+        self.root.geometry("300x320+50+50")
 
         # Bind all key input events to the window
         # This will capture all keystrokes for remote control of robot
-        self.window.bind_all('<Key>', self.key_input)
+        self.root.bind_all('<Key>', self.key_input)
 
         # Create and layout widgets
         self.create_widgets()
         mainloop()
 
-#--------------------------------- FORWARD --------------------------------#
-    def go_forward(self):
-        self.reset_servos()
-        rover.forward(self.speed)
-
-#--------------------------------- REVERSE --------------------------------#
-    def go_reverse(self):
-        self.reset_servos()
-        rover.reverse(self.speed)
-
-#-------------------------- LEFT ------------------------------------#
-    def go_left(self):
-        rover.setServo(self.servo_FL, -20)
-        rover.setServo(self.servo_FR, -20)
-        rover.setServo(self.servo_RL, 20)
-        rover.setServo(self.servo_RR, 20)
-
-#-------------------------- RIGHT ------------------------------------#
-    def go_right(self):
-        rover.setServo(self.servo_FL, 20)
-        rover.setServo(self.servo_FR, 20)
-        rover.setServo(self.servo_RL, -20)
-        rover.setServo(self.servo_RR, -20)
-
-#------------------------- RESET SERVOS ------------------------------------#
-    def reset_servos(self):
-        """
-            Set all wheel steering servos to 0 (straight ahead)
-        """
-        rover.setServo(self.servo_FL, 0)
-        rover.setServo(self.servo_FR, 0)
-        rover.setServo(self.servo_RL, 0)
-        rover.setServo(self.servo_RR, 0)
-
-#--------------------------------- INCREASE SPEED -------------------------------------#
+# -------------------------- INCREASE SPEED -------------------------------#
     def increase_speed(self):
         """ Increase speed """
         self.speed = min(100, self.speed+10)
-        self.lbl_speed.config(text="Speed: " + str(self.speed))
+        self.lbl_speed.config(text=f"Speed: {self.speed}")
 
-#--------------------------------- DECREASE SPEED -------------------------------------#
+# ----------------------------- DECREASE SPEED ----------------------------#
     def decrease_speed(self):
         """ Decrease speed """
         self.speed = max(0, self.speed-10)
-        self.lbl_speed.config(text="Speed: " + str(self.speed))
+        self.lbl_speed.config(text=f"Speed: {self.speed}")
 
-#----------------------------- EXIT PROGRAM ---------------------------------#
+# ----------------------------- EXIT PROGRAM ------------------------------#
     def exit_program(self):
         print("\nExiting")
         # Cleanup rover resources
         rover.cleanup()
         # Destroy the program object
-        self.window.destroy()
+        self.root.destroy()
 
-#--------------------------------- KEY INPUT -----------------------------------------#
+# --------------------------------- KEY INPUT -----------------------------#
     def key_input(self, event):
         # Get all key preseses as lower case
         key_press = event.keysym.lower()
@@ -113,19 +78,19 @@ class RoverGUI:
 
         # Move Forward
         if key_press == 'w':
-            self.go_forward()
+            self.rl.forward()
 
         # Move Backward
         elif key_press == 's':
-            self.go_reverse()
+            self.rl.reverse()
 
         # Turn Left
         elif key_press == 'a':
-            self.go_left()
+            self.rl.left()
 
         # Turn Right
         elif key_press == 'd':
-            self.go_right()
+            self.rl.right()
 
         # Increase Speed
         elif key_press == 't':
@@ -143,7 +108,7 @@ class RoverGUI:
         elif key_press == 'z':
             self.exit_program()
 
-#--------------------------------- CREATE WIDGETS -------------------------------------#
+# ------------------------- CREATE WIDGETS --------------------------------#
     def create_widgets(self):
         """ Create and layout widgets """
         # Reference for GUI display
@@ -159,16 +124,16 @@ class RoverGUI:
         # Create frames
         # Create main label frame to hold remote control widgets
         self.main_frame = LabelFrame(
-            self.window,
+            self.root,
             text="Remote Control",
             relief=GROOVE)
         self.middle_frame = LabelFrame(
-            self.window,
+            self.root,
             text="Speed",
             relief=GROOVE)
         # Create main frame to hold widgets
         self.bottom_frame = LabelFrame(
-            self.window,
+            self.root,
             text="Control",
             relief=GROOVE)
 
@@ -230,4 +195,3 @@ class RoverGUI:
 
 # Create remote control object
 rover_gui = RoverGUI()
-
