@@ -15,11 +15,8 @@ The 4tronix Mars Rover is loosely based on the Curiosity and Mars 2020 rovers fr
 - pca9685.py: Rover library from 4tronix - must be in the program folder
 
 
-## Purpose
-I am an Information Technology Instructor at Western Nebraska Community College. I teach Information Technology Technical Support, CyberSecurity and Computer Science.
-
-This repository is for my personal projects and resources with the Raspberry Pi based Modular Robotics GoPiGo3. WNCC NASA GoPiGo3 projects are located at https://github.com/itinstructor/WNCCNASA
-  - Used opencv-python for video streaming in a Tkinter app. It takes less overhead than streaming from a web server on the pi over the network. The video stream stays local. The only network traffic is the RealVNC traffic.
+### Changes
+- 08/01/2023: Used opencv-python for video streaming in a Tkinter app. It takes less overhead than streaming from a web server on the pi over the network. The video stream stays local. The only network traffic is the RealVNC traffic.
 - 01/01/2021: The robot was designed for a Raspberry Pi Zero W. I put in a Raspberry Pi Zero 2 W. I wanted the extra horsepower of the Zero 2. The Zero 2 takes more voltage than the 4 onboard AA rechargeble batteries can put out. I connected a small phone charger battery directly to the Pi.
 
 ### Purpose
