@@ -21,7 +21,7 @@ The 4tronix Mars Rover is loosely based on the Curiosity and Mars 2020 rovers fr
 
 ### Purpose
 I am an Information Technology Instructor at Western Nebraska Community College. I teach Information Technology, CyberSecurity and Computer Science.
-Who can ever have enough robots? Who doesn't want their own MARS Rover?
+Who can ever have enough robots? Who doesn't want to drive their own MARS Rover?
 
 This repository is for my personal projects with the M.A.R.S. Rover.
 
