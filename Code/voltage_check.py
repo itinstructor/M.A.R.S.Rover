@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-
+"""
+    Name: voltage_check.py
+    Author: 
+    Created:
+    Purpose: Basic test for Ultrasonic Sensor on MARS Rover mast
+"""
 import subprocess
 
 GET_THROTTLED_CMD = 'vcgencmd get_throttled'

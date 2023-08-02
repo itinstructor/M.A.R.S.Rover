@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 """
-    Name: polyangle_console.py
+    Name: drive_rover_cli.py
     Author: William A Loring
     Created:
-    Purpose: Python console program to calculate the
-    interior and exterior angles of a polygon
-"""
-
-# Mars Rover Simple Drive Mode
-# Similar to motortest.py but integrates servo steering
-# Moves: Forward, Reverse, turn Right, turn Left, Stop
-# Press Ctrl-C to stop
+    Purpose: Mars Rover Simple Drive Mode
+    Similar to motortest.py but integrates servo steering
+    Moves: Forward, Reverse, turn Right, turn Left, Stop
+    Press Ctrl-C to stop
 #
 # ------------------------------------------------
 # History
 # ------------------------------------------------
 # Author        Date            Comments
 # Loring        12/17/21        Refactored to OOP
+"""
 
 # Python Module to support 4tronix M.A.R.S. Rover
 import rover

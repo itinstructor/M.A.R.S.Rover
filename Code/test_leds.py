@@ -1,13 +1,11 @@
 # !/usr/bin/env python3
 """
-    Name: led_test.py
+    Name: test_leds.py
     Author: William A Loring
     Created: 1/1/22
     Purpose: Smart RGB LED Test
-    NOTE: Start program with sudo
+    NOTE: sudo test_leds.py
 """
-
-# Purpose: MARS Rover Tkinter remote control program
 # ------------------------------------------------
 # History
 # ------------------------------------------------

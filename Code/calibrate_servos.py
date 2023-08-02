@@ -1,14 +1,31 @@
 #!/usr/bin/env python3
-# Calibrates and saves Servo Offsets on MARS Rover
-# sudo calibrate_servos.py
-
+"""
+    Name: calibrate_servos.py
+    Author: 
+    Created:
+    Purpose: Calibrate and saves Servo Offsets on MARS Rover
+    NOTE: sudo calibrate_servos.py
+"""
 import rover
-
 # ======================================================================
 # Reading single character by forcing stdin to raw mode
 import sys
 import tty
 import termios
+# Set servo number constants
+servo_FL = 9
+servo_RL = 11
+servo_FR = 15
+servo_RR = 13
+
+
+# ------------------------- RESET SERVOS ----------------------------------#
+def reset_servos():
+    """Set all wheel steering servos to 0 (straight ahead)"""
+    rover.setServo(servo_FL, 0)
+    rover.setServo(servo_FR, 0)
+    rover.setServo(servo_RL, 0)
+    rover.setServo(servo_RR, 0)
 
 
 def readchar():
@@ -54,6 +71,7 @@ blue = rover.fromRGB(0, 0, 255)
 
 rover.setColor(red)
 rover.show()
+reset_servos()
 print('Existing servo offsets')
 print(rover.offsets)
 print()

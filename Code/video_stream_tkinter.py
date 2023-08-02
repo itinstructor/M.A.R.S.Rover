@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
     Name: video_stream_tkinter.py
-    Author: 
-    Created: 09/08/22
-    Purpose: Stream video to a Tkinter interface
-    Rotate image 90 degrees as camera is sideways on MARS Rover
-    Enable legacy camera support for now as opencv doesn't work with Bullseye libcamera stack
+    Author: William A Loring
+    Created: 08/01/23
+    Purpose: Stream video to a Tkinter interface using opencv
 """
 # Raspberry Pi/Linux
 # sudo pip3 install opencv-python
@@ -19,7 +17,6 @@
 # sudo pip3 install numpy -U
 import tkinter as tk
 import tkinter.ttk as ttk
-import numpy as np
 from PIL import Image
 from PIL import ImageTk
 import cv2
@@ -31,67 +28,66 @@ class VideoStar():
     def __init__(self) -> None:
         self.root = tk.Tk()
         self.root.title("Video Star OpenCV")
-        # Set the window size and location
-        # horizontal vertical pixels in size, location at 50x50
+        # Set window location at 400x50
         self.root.geometry("+400+50")
         # Call self.quit when window is closed
         self.root.protocol("WM_DELETE_WINDOW", self.quit)
 
-        # Create numpy array to hold image data from cv2
-        # uint8: 8-bit unsigned integer max value: 255
-        # size is [height, width, 3]
-        self.frame = np.random.randint(
-            low=0, high=255, size=[640, 480, 3], dtype='uint8'
-        )
-        # Create img from numpy array
-        self.img = ImageTk.PhotoImage(Image.fromarray(self.frame))
         self.create_widgets()
-        # Start video capture on startup
-        self.start_capture()
+        # Create VideoCapture object 0 = 1st camera
+        self.cam = cv2.VideoCapture(0)
+        # Start streaming to false
+        self.streaming = False
         self.root.mainloop()
 
-# ------------------ STOP VIDEO CAPTURE -----------------------------------#
-    def stop_capture(self):
+# ----------------------- START STOP VIDEO STREAM -------------------------#
+    def start_stop_stream(self):
+        if not self.streaming:
+            self.start_stream()
+        else:
+            self.stop_stream()
+
+# ------------------------ STOP VIDEO STREAM ------------------------------#
+    def stop_stream(self):
         """Stop video capture"""
+        self.streaming = False
+        self.btn_start_stop.configure(text="Start Stream")
         # Release the camera capture object
         if self.cam.isOpened():
             self.cam.release()
-        self.lbl_status_bar.configure(text=" Video Capture Stopped")
+        self.lbl_status_bar.configure(text=" Video Stream Stopped")
 
-# ------------------ START VIDEO CAPTURE ----------------------------------#
-    def start_capture(self):
+# ----------------------- START VIDEO CAPTURE -----------------------------#
+    def start_stream(self):
         """Start video capture"""
-        self.lbl_status_bar.configure(text=" Video Capture Starting Up . . .")
+        self.streaming = True
+        self.lbl_status_bar.configure(text=" Video Stream Starting Up . . .")
         self.lbl_status_bar.update()
-        # Create VideoCapture object 0 = 1st camera
-        self.cam = cv2.VideoCapture(0)
-        self.lbl_status_bar.configure(text=" Video Capture Running . . .")
-        try:
-            while True:
-                # Read camera image frame by frame
-                # ret: Is a frame available True
-                # frame: captured image
-                ret, self.frame = self.cam.read()
-                # Convert cv2 colorspace BGR to RGB
-                self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
-                # Rotate image 90 degrees as camera is sideways on MARS Rover
-                self.frame = cv2.rotate(self.frame, cv2.ROTATE_90_CLOCKWISE)
-                # PIL Image.fromarray creates image from numpy array self.frame
-                # ImageTk.PhotoImage converts image to Tkinter image format
-                img_update = ImageTk.PhotoImage(Image.fromarray(self.frame))
-                # Set label image to new image
-                self.lbl_image.configure(image=img_update)
-                self.lbl_image.image = img_update
-                # Update the label to display the new image
-                self.lbl_image.update()
-                # self.display_fps()
-                if not ret:
-                    print("Failed to grab frame")
-                    break
+        self.btn_start_stop.configure(text="Stop Stream")
+        self.lbl_status_bar.configure(text=" Video Stream Running . . .")
+        self.update_stream()
 
-        except Exception as e:
-            pass
-            # print(f"{e}")
+# ------------------------ UPDATE STREAM ----------------------------------#
+    def update_stream(self):
+        if self.streaming:
+            # Read camera image frame by frame
+            # ret: Is a frame available True
+            # frame: captured image
+            ret, frame = self.cam.read()
+            if ret:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                image = Image.fromarray(frame)
+                photo = ImageTk.PhotoImage(image=image)
+                self.canvas.create_image(0, 0, anchor=tk.NW, image=photo)
+                self.stream = photo
+            else:
+                self.lbl_status_bar.configure(text=" Failed to grab frame")
+                # # Convert cv2 colorspace BGR to RGB
+                # self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+
+                # # self.display_fps()
+        # Update video stream every 10 ms when the main program isn't busy
+        self.root.after(10, self.update_stream)
 
 # ---------------------- TAKE SNAPSHOT ------------------------------------#
     def snapshot(self):
@@ -99,7 +95,7 @@ class VideoStar():
         # Get a frame from the video source
         ret, frame = self.get_frame()
         if ret == True:
-            # Write video frame to jpg image
+            # Write video frame to jpg image with a date stamp
             cv2.imwrite(
                 "frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") +
                 ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
@@ -126,35 +122,29 @@ class VideoStar():
 # ------------------ CREATE WIDGETS ---------------------------------------#
     def create_widgets(self):
         """Create widgets"""
-        # Create zero size image to resize label by pixels
-        img = tk.PhotoImage()
-        # Label to display video stream with zero size pixel
-        self.lbl_image = tk.Label(self.root, image=img, width=640, height=480)
-
+        self.canvas = tk.Canvas(self.root, width=640, height=480)
         message = f" OpenCV Video Stream"
         self.lbl_status_bar = tk.Label(
             self.root, text=message, anchor=tk.W, relief=tk.RIDGE)
 
         BUTTON_WIDTH = 16
-        btn_start_capture = ttk.Button(
-            self.root, text="Start Capture",
-            command=self.start_capture, width=BUTTON_WIDTH)
-        btn_stop_capture = ttk.Button(
-            self.root, text="Stop Capture",
-            command=self.stop_capture, width=16)
-        btn_snapshot = ttk.Button(
+        self.btn_start_stop = ttk.Button(
+            self.root, text="Start Stream",
+            command=self.start_stop_stream,
+            width=BUTTON_WIDTH
+        )
+        self.btn_snapshot = ttk.Button(
             self.root, text="Snapshot",
             command=self.snapshot, width=BUTTON_WIDTH
         )
-        btn_quit = ttk.Button(
+        self.btn_quit = ttk.Button(
             self.root, text="Quit", command=self.quit, width=BUTTON_WIDTH)
 
-        self.lbl_image.grid(row=0, column=0, columnspan=4)
+        self.canvas.grid(row=0, column=0, columnspan=4)
 
-        btn_start_capture.grid(row=1, column=0)
-        btn_stop_capture.grid(row=1, column=1)
-        btn_snapshot.grid(row=1, column=2)
-        btn_quit.grid(row=1, column=3)
+        self.btn_start_stop.grid(row=1, column=0)
+        self.btn_snapshot.grid(row=1, column=1)
+        self.btn_quit.grid(row=1, column=2)
 
         self.lbl_status_bar.grid(row=2, column=0, columnspan=4, sticky="WE")
 
@@ -162,7 +152,7 @@ class VideoStar():
         for child in self.root.winfo_children():
             child.grid_configure(padx=6, pady=6, ipadx=1, ipady=1)
 
-# ------------------ DISPLAY FPS ------------------------------------------#
+# --------------------------- DISPLAY FPS ---------------------------------#
     def display_fps(self):
         """Get and display FPS"""
         # Get frames per second from cam capture properties
@@ -171,7 +161,7 @@ class VideoStar():
         self.lbl_status_bar.configure(text=message)
         self.lbl_status_bar.update()
 
-# ------------------ QUIT -------------------------------------------------#
+# --------------------------- QUIT PROGRAM --------------------------------#
     def quit(self):
         try:
             # If cam is in use, release it

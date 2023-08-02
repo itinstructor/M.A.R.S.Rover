@@ -3,11 +3,8 @@
     Name: rover_gui.py
     Author: William A Loring
     Created: 12/18/21
-    Purpose: Python tkinter program to 
-    control MARS rover
+    Purpose: MARS Rover Tkinter remote control program
 """
-
-# Purpose: MARS Rover Tkinter remote control program
 # ------------------------------------------------
 # History
 # ------------------------------------------------

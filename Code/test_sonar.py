@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-# Basic test for Ultrasonic Sensor on MARS Rover mast
+"""
+    Name: test_sonar.py
+    Author: 
+    Created:
+    Purpose: Basic test for Ultrasonic Sensor on MARS Rover mast
+"""
 
 import rover
 import time
@@ -17,7 +22,4 @@ try:
         time.sleep(1)
 
 except KeyboardInterrupt:
-    print()
-
-finally:
     rover.cleanup()

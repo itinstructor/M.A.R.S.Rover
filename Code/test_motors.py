@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-# Mars Rover Motor Test
+"""
+    Name: motor_test.py
+    Author: 
+    Created:
+    Purpose: Basic test for motor control
+"""
 # Moves: Forward, Reverse, turn Right, turn Left, Stop
 # Press Ctrl-C to stop
-#
 # To check wiring is correct ensure the order of movement as above is correct
 
 import rover
-
 # ======================================================================
 # Reading single character by forcing stdin to raw mode
 import sys

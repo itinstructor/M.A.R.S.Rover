@@ -1,5 +1,10 @@
 #!/usr/bin/python
-# servoTest.py
+"""
+    Name: test_servos.py
+    Author: 
+    Created:
+    Purpose: Basic test for servos
+"""
 
 import termios
 import tty

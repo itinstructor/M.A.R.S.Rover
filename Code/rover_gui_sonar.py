@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 """
-    Name: rover_gui.py
+    Name: rover_gui_sonar.py
     Author: William A Loring
     Created: 12/18/21
     Purpose: Python tkinter program to 
-    control MARS rover
+    control MARS rover and use ultrasonic sensor
 """
-
-# Purpose: MARS Rover Tkinter remote control program
 # ------------------------------------------------
 # History
 # ------------------------------------------------
@@ -72,7 +70,7 @@ class RoverGUI:
         self.create_widgets()
         mainloop()
 
-#------------------------------ START SONAR --------------------------------#
+# ------------------------------ START SONAR --------------------------------#
     def start_sonar(self):
         # Get distance in centimeters
         self.btn_start_sonar["state"] = "disabled"
@@ -92,7 +90,7 @@ class RoverGUI:
         # Take a reading every 250 ms when main program thread isn't busy
         self.sonar_id = self.window.after(250, self.start_sonar)
 
-#------------------------------ STOP SONAR --------------------------------#
+# ------------------------------ STOP SONAR --------------------------------#
     def stop_sonar(self):
         if self.sonar_id:
             self.window.after_cancel(self.sonar_id)
@@ -101,31 +99,31 @@ class RoverGUI:
         self.btn_stop_sonar["state"] = "disabled"
         self.lbl_sonar_distance.configure(text='')
 
-#--------------------------------- FORWARD --------------------------------#
+# --------------------------------- FORWARD --------------------------------#
     def go_forward(self):
         self.reset_servos()
         rover.forward(self.speed)
 
-#--------------------------------- REVERSE --------------------------------#
+# --------------------------------- REVERSE --------------------------------#
     def go_reverse(self):
         self.reset_servos()
         rover.reverse(self.speed)
 
-#-------------------------- LEFT ------------------------------------#
+# -------------------------- LEFT ------------------------------------#
     def go_left(self):
         rover.setServo(self.servo_FL, -20)
         rover.setServo(self.servo_FR, -20)
         rover.setServo(self.servo_RL, 20)
         rover.setServo(self.servo_RR, 20)
 
-#-------------------------- RIGHT ------------------------------------#
+# -------------------------- RIGHT ------------------------------------#
     def go_right(self):
         rover.setServo(self.servo_FL, 20)
         rover.setServo(self.servo_FR, 20)
         rover.setServo(self.servo_RL, -20)
         rover.setServo(self.servo_RR, -20)
 
-#------------------------- RESET SERVOS ------------------------------------#
+# ------------------------- RESET SERVOS ------------------------------------#
     def reset_servos(self):
         """
             Set all wheel steering servos to 0 (straight ahead)
@@ -135,7 +133,7 @@ class RoverGUI:
         rover.setServo(self.servo_RL, 0)
         rover.setServo(self.servo_RR, 0)
 
-#--------------------------------- INCREASE SPEED -------------------------------------#
+# --------------------------------- INCREASE SPEED -------------------------------------#
     def increase_speed(self):
         """
             Increase current speed by 10, max 100
@@ -143,7 +141,7 @@ class RoverGUI:
         self.speed = min(100, self.speed+10)
         self.lbl_speed.config(text=f"Speed: {self.speed}")
 
-#--------------------------------- DECREASE SPEED -------------------------------------#
+# --------------------------------- DECREASE SPEED -------------------------------------#
     def decrease_speed(self):
         """
             Decrease current speed by 10, min 0
@@ -151,7 +149,7 @@ class RoverGUI:
         self.speed = max(0, self.speed-10)
         self.lbl_speed.config(text=f"Speed: {self.speed}")
 
-#----------------------------- EXIT PROGRAM ---------------------------------#
+# ----------------------------- EXIT PROGRAM ---------------------------------#
     def exit_program(self):
         print("\nExiting")
         # Cleanup rover resources
@@ -159,7 +157,7 @@ class RoverGUI:
         # Destroy the program object
         self.window.destroy()
 
-#--------------------------------- KEY INPUT -----------------------------------------#
+# --------------------------------- KEY INPUT -----------------------------------------#
     def key_input(self, event):
         # Get all key presses as lower case
         key_press = event.keysym.lower()
@@ -197,7 +195,7 @@ class RoverGUI:
         elif key_press == 'z':
             self.exit_program()
 
-#--------------------------------- CREATE WIDGETS -------------------------------------#
+# --------------------------------- CREATE WIDGETS -------------------------------------#
     def create_widgets(self):
         """ Create and layout widgets """
         # Reference for GUI display
