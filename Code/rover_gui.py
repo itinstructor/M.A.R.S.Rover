@@ -35,7 +35,7 @@ class RoverGUI:
 
         # Create window
         self.root = Tk()
-        self.root.title("MARS Rover Remote")
+        self.root.title("MARS Rover")
 
         # Call self.quit when window is closed
         self.root.protocol("WM_DELETE_WINDOW", self.exit_program)
@@ -123,11 +123,11 @@ class RoverGUI:
         """ Create and layout widgets """
         # Reference for GUI display
         """
-                    W = Forward
-            S = Backward    A = Left
-                    D = Right  
+                           W: Forward
+            S = Backward   Spacebar: Stop    A: Left
+                           D = Right  
             T = Increase Speed  G = Decrease Speed  
-            Spacebar = Stop
+            
             Speed: 200
             Z = Exit    Exit button
         """
@@ -164,32 +164,35 @@ class RoverGUI:
             self.main_frame, text=" S: Reverse", relief=RIDGE)
         lbl_a_left = Label(self.main_frame, text=" A: Left", relief=RIDGE)
         lbl_d_right = Label(self.main_frame, text=" D: Right", relief=RIDGE)
+        lbl_spacebar_stop = Label(
+            self.main_frame, text=" Spacebar: Stop", relief=RIDGE)
+
+        lbl_t_increase_speed = Label(
+            self.middle_frame, text=" T: Increase Speed", relief=RIDGE)
+        lbl_g_decrease_speed = Label(
+            self.middle_frame, text=" G: Decrease Speed", relief=RIDGE)
         # Get and display current speed setting
         self.lbl_speed = Label(
             self.middle_frame, text=f"Speed: {self.speed}")
 
-        lbl_t_increase_speed = Label(
-            self.middle_frame, text="T: Increase Speed")
-        lbl_g_decrease_speed = Label(
-            self.middle_frame, text="G: Decrease Speed")
-        lbl_spacebar_stop = Label(self.middle_frame, text="Spacebar: Stop")
         lbl_remote_z = Label(self.bottom_frame, text="Z: Exit")
 
         btn_exit = Button(
             self.bottom_frame,
             text="Exit",
-            command=self.exit_program)
+            command=self.exit_program
+        )
 
         # --------------------- LAYOUT WIDGETS --------------------------- #
         lbl_w_forward.grid(row=0, column=1)
         lbl_a_left.grid(row=1, column=0)
+        lbl_spacebar_stop.grid(row=1, column=1)
         lbl_d_right.grid(row=1, column=2)
         lbl_s_reverse.grid(row=2, column=1)
 
-        self.lbl_speed.grid(row=0, column=0, sticky=W)
-        lbl_t_increase_speed.grid(row=1, column=0, sticky=W)
-        lbl_g_decrease_speed.grid(row=1, column=1, sticky=W)
-        lbl_spacebar_stop.grid(row=0, column=1, sticky=W)
+        lbl_t_increase_speed.grid(row=0, column=0, sticky=W)
+        lbl_g_decrease_speed.grid(row=0, column=1, sticky=W)
+        self.lbl_speed.grid(row=1, column=0, sticky=W)
 
         lbl_remote_z.grid(row=1, column=0, sticky=W)
         btn_exit.grid(row=1, column=1, sticky=E)
@@ -197,12 +200,13 @@ class RoverGUI:
         # --------------------- CONFIGURE PADDING ------------------------ #
         pad = 6
         for child in self.main_frame.winfo_children():
-            child.grid_configure(padx=3, pady=3, ipadx=2, ipady=2)
+            child.grid_configure(padx=pad, pady=pad, ipadx=pad, ipady=pad)
         for child in self.middle_frame.winfo_children():
-            child.grid_configure(padx=pad, pady=pad)
+            child.grid_configure(padx=pad, pady=pad, ipadx=pad, ipady=pad)
         for child in self.bottom_frame.winfo_children():
-            child.grid_configure(padx=pad, pady=pad)
+            child.grid_configure(padx=pad, pady=pad, ipadx=pad, ipady=pad)
 
 
 # Create remote control object
 rover_gui = RoverGUI()
+
