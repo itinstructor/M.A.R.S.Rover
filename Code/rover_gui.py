@@ -3,8 +3,11 @@
     Name: rover_gui.py
     Author: William A Loring
     Created: 12/18/21
-    Purpose: MARS Rover Tkinter remote control program
+    Purpose: Python tkinter program to 
+    control MARS rover
 """
+
+# Purpose: MARS Rover Tkinter remote control program
 # ------------------------------------------------
 # History
 # ------------------------------------------------
@@ -25,6 +28,8 @@ class RoverGUI:
         """ Initialize the program """
         self.rl = rover_lib.RoverLib()
 
+        # Reset servos to straight ahead
+        self.rl.reset_servos()
         # Set initial speed
         self.speed = 60
 
@@ -47,19 +52,27 @@ class RoverGUI:
         self.create_widgets()
         mainloop()
 
-# -------------------------- INCREASE SPEED -------------------------------#
+# -------------------------- RESET SERVOS -------------------------------- #
+    def reset_servos(self):
+        """Set all wheel steering servos to 0 (straight ahead)"""
+        self.rl.setServo(servo_FL, 0)
+        self.rl.setServo(servo_FR, 0)
+        self.rl.setServo(servo_RL, 0)
+        self.rl.setServo(servo_RR, 0)
+
+# -------------------------- INCREASE SPEED ------------------------------ #
     def increase_speed(self):
-        """ Increase speed """
+        """Increase speed by 10"""
         self.speed = min(100, self.speed+10)
         self.lbl_speed.config(text=f"Speed: {self.speed}")
 
-# ----------------------------- DECREASE SPEED ----------------------------#
+# ----------------------------- DECREASE SPEED --------------------------- #
     def decrease_speed(self):
-        """ Decrease speed """
+        """Decrease speed by 10"""
         self.speed = max(0, self.speed-10)
         self.lbl_speed.config(text=f"Speed: {self.speed}")
 
-# ----------------------------- EXIT PROGRAM ------------------------------#
+# ----------------------------- EXIT PROGRAM ----------------------------- #
     def exit_program(self):
         print("\nExiting")
         # Cleanup rover resources
@@ -67,7 +80,7 @@ class RoverGUI:
         # Destroy the program object
         self.root.destroy()
 
-# --------------------------------- KEY INPUT -----------------------------#
+# --------------------------------- KEY INPUT ---------------------------- #
     def key_input(self, event):
         # Get all key preseses as lower case
         key_press = event.keysym.lower()
@@ -105,7 +118,7 @@ class RoverGUI:
         elif key_press == 'z':
             self.exit_program()
 
-# ------------------------- CREATE WIDGETS --------------------------------#
+# ------------------------- CREATE WIDGETS ------------------------------- #
     def create_widgets(self):
         """ Create and layout widgets """
         # Reference for GUI display
@@ -118,7 +131,7 @@ class RoverGUI:
             Speed: 200
             Z = Exit    Exit button
         """
-        # Create frames
+        # --------------------- CREATE FRAMES ---------------------------- #
         # Create main label frame to hold remote control widgets
         self.main_frame = LabelFrame(
             self.root,
@@ -143,6 +156,7 @@ class RoverGUI:
         self.middle_frame.pack_propagate(False)
         self.bottom_frame.pack_propagate(False)
 
+        # --------------------- CREATE WIDGETS --------------------------- #
         # Create widgets and attach them to the correct frame
         lbl_w_forward = Label(
             self.main_frame, text=" W: Forward", relief=RIDGE)
@@ -166,7 +180,7 @@ class RoverGUI:
             text="Exit",
             command=self.exit_program)
 
-        # Grid the widgets
+        # --------------------- LAYOUT WIDGETS --------------------------- #
         lbl_w_forward.grid(row=0, column=1)
         lbl_a_left.grid(row=1, column=0)
         lbl_d_right.grid(row=1, column=2)
@@ -180,7 +194,7 @@ class RoverGUI:
         lbl_remote_z.grid(row=1, column=0, sticky=W)
         btn_exit.grid(row=1, column=1, sticky=E)
 
-        # Set padding for all widgets in frames
+        # --------------------- CONFIGURE PADDING ------------------------ #
         pad = 6
         for child in self.main_frame.winfo_children():
             child.grid_configure(padx=3, pady=3, ipadx=2, ipady=2)
