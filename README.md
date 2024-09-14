@@ -1,6 +1,6 @@
 # M.A.R.S. Rover
 
-The 4tronix MARS Rover is loosely based on the Curiosity and Mars 2020 rovers from NASA. It uses the same rocker arm, bogey, and differential arm mechanisms.
+The 4tronix MARS Rover is loosely based on the Curiosity and other Mars 2020 rovers from NASA. It uses the same rocker arm, bogey, and differential arm mechanisms.
 
 - I purchased the Raspberry Pi Zero version of the MARS Rover. I used a Raspberry Pi Zero 2 W as the Pi Zero doesn't have enough horse power to process and stream video.
 - https://shop.4tronix.co.uk/products/marsrover 
